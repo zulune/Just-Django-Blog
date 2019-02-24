@@ -29,6 +29,7 @@ class Post(models.Model):
     timestamp = models.DateTimeField(
         _("Timestamp"), auto_now=False, auto_now_add=True)
     comment_count = models.IntegerField(_("Comment count"), default=0)
+    view_count = models.IntegerField(_("View count"), default=0)
     author = models.ForeignKey(Author, verbose_name=_(
         "Author"), on_delete=models.CASCADE)
     thumbnail = models.ImageField(_("Thumbnail"))
