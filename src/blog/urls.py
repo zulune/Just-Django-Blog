@@ -19,13 +19,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from posts.views import index, blog, post
+from posts.views import index, blog, post, search
 
 urlpatterns = [
     path('', index),
     path('blog/', blog, name="post-list"),
     path('post/<pk>/', post, name="post-detail"),
+    path('search/', search, name="search"),
     path('admin/', admin.site.urls),
+    path('tinymce/', include("tinymce.urls")),
 ]
 
 if settings.DEBUG:
