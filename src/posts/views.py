@@ -26,7 +26,7 @@ def index(request):
 def blog(request):
     most_recent = Post.objects.order_by("-timestamp")[:3]
     post_list = Post.objects.all()
-    paginator = Paginator(post_list, 2)
+    paginator = Paginator(post_list, 6)
     page_request_var = 'page'
     page = request.GET.get(page_request_var)
     try:
@@ -43,5 +43,5 @@ def blog(request):
     return render(request, "blog.html", context)
 
 
-def post(request):
+def post(request, pk):
     return render(request, "post.html", {})
