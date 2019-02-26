@@ -39,6 +39,12 @@ class Post(models.Model):
     thumbnail = models.ImageField(_("Thumbnail"))
     categories = models.ManyToManyField(Category, verbose_name=_("Categories"))
     featured = models.BooleanField(_("Featured"), default=False)
+    previous_post = models.ForeignKey("self", verbose_name=_(
+        "Previous post"), related_name='previous', 
+        on_delete=models.SET_NULL, blank=True, null=True)
+    next_post = models.ForeignKey("self", verbose_name=_(
+        "Next post"), related_name='next', 
+        on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.title
