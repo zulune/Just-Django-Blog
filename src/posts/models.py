@@ -51,4 +51,19 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse("post-detail", kwargs={"pk": self.pk})
+
+    @property
+    def get_comments(self):
+        return self.comments.all().order_by('-timestamp')
     
+
+class Comment(models.Model):
+    user = models.ForeignKey(
+        User, verbose_name=_("User"), on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(_("Timestamp"), auto_now_add=True)
+    content = models.TextField(_("Comment text"))
+    post = models.ForeignKey(Post, verbose_name=_(
+        "Post"), related_name='comments', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
