@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {{title}} | {{ block.super }}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-2">
+            <h3>{{ title }}</h3>
+            {{form.media}}
+            <form action="." method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group row">
+                        <div class="col-sm-2">
+                            <label for="">
+                                {{field.label}}
+                            </label>
+                        </div>
+                        <div class="col-sm-10">
+                            {{field}}
+                            <span>{{field.help_text}}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+                <button class="btn btn-primary" type="submit">Create</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block custom_script %}
+
+<script>
+    $(document).ready(function() {
+        $("label").addClass("label-control")
+        $("input[type='text']").addClass("form-control");
+        $("select[name='categories']").addClass("form-control");
+        $("select[name='previous_post'], select[name='next_post']").addClass("form-control");
+        $("textarea").addClass("form-control");
+    })
+</script>
+{% endblock custom_script %}

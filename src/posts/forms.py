@@ -4,7 +4,7 @@ from .models import Post, Comment
 
 
 class TinyMCEWidget(TinyMCE):
-    def use_required_attribute(self, **kwargs):
+    def use_required_attribute(self, *args):
         return False
 
 
@@ -17,7 +17,8 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ('title', 'overview', 'content', 'thumbnail',
+                  'categories', 'featured', 'previous_post', 'next_post')
 
 
 class CommentForm(forms.ModelForm):
