@@ -10,6 +10,16 @@ from tinymce import HTMLField
 User = get_user_model()
 
 
+class PostView(models.Model):
+    user = models.ForeignKey(User, verbose_name=_(
+        "User"), on_delete=models.CASCADE)
+    post = models.ForeignKey('Post', verbose_name=_(
+        "Post"), on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
+
+
 class Author(models.Model):
     user = models.OneToOneField(User, verbose_name=_(
         "Author"), on_delete=models.CASCADE)
@@ -25,6 +35,17 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
+class Comment(models.Model):
+    user = models.ForeignKey(
+    User, verbose_name=_("User"), on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(_("Timestamp"), auto_now_add=True)
+    content = models.TextField(_("Comment text"))
+    post = models.ForeignKey('Post', verbose_name=_(
+        "Post"), related_name='comments', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
+
 
 class Post(models.Model):
     title = models.CharField(_("Title"), max_length=50)
@@ -32,8 +53,8 @@ class Post(models.Model):
     timestamp = models.DateTimeField(
         _("Timestamp"), auto_now=False, auto_now_add=True)
     content = HTMLField()
-    comment_count = models.IntegerField(_("Comment count"), default=0)
-    view_count = models.IntegerField(_("View count"), default=0)
+    # comment_count = models.IntegerField(_("Comment count"), default=0)
+    # view_count = models.IntegerField(_("View count"), default=0)
     author = models.ForeignKey(Author, verbose_name=_(
         "Author"), on_delete=models.CASCADE)
     thumbnail = models.ImageField(_("Thumbnail"))
@@ -61,15 +82,11 @@ class Post(models.Model):
     @property
     def get_comments(self):
         return self.comments.all().order_by('-timestamp')
-    
 
-class Comment(models.Model):
-    user = models.ForeignKey(
-        User, verbose_name=_("User"), on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(_("Timestamp"), auto_now_add=True)
-    content = models.TextField(_("Comment text"))
-    post = models.ForeignKey(Post, verbose_name=_(
-        "Post"), related_name='comments', on_delete=models.CASCADE)
+    @property
+    def comment_count(self):
+        return Comment.objects.filter(post=self).count()
 
-    def __str__(self):
-        return self.user.username
+    @property
+    def view_count(self):
+        return PostView.objects.filter(post=self).count()
